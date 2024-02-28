@@ -6,10 +6,16 @@
     <title>Movie Review Website</title>
 </head>
 <body>
+    <nav>
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/profile">Profile</a></li> 
+        </ul>
+    </nav>
     <h1>List of Movies</h1>
     <ul>
-        {% for id, movie in movies.items() %}
-            <li><a href="/movie/{{ id }}">{{ movie.title }} ({{ movie.year }})</a></li>
+        {% for movie in movies %}
+            <li><a href="/movie/{{ movie._id }}">{{ movie.title }} ({{ movie.year }})</a></li>
         {% endfor %}
     </ul>
 </body>

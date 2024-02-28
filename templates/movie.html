@@ -6,16 +6,22 @@
     <title>{{ movie.title }}</title>
 </head>
 <body>
+    <nav>
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/profile">Profile</a></li> 
+        </ul>
+    </nav>
     <h1>{{ movie.title }} ({{ movie.year }})</h1>
-    <h2>Reviews</h2>
+    <h2>Comments</h2>
     <ul>
-        {% for review in reviews %}
-            <li>{{ review }}</li>
+        {% for comment in comments %}
+            <li>{{ comment.comment }}</li>
         {% endfor %}
     </ul>
-    <form action="/post_review/{{ movie_id }}" method="post">
-        <label for="review">Write a Review:</label><br>
-        <textarea id="review" name="review" rows="4" cols="50"></textarea><br>
+    <form action="/post_comment/{{ movie._id }}" method="post">
+        <label for="comment">Write a Comment:</label><br>
+        <textarea id="comment" name="comment" rows="4" cols="50"></textarea><br>
         <input type="submit" value="Submit">
     </form>
 </body>
