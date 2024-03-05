@@ -5,13 +5,20 @@ app = Flask(__name__)
 
 # Connect to MongoDB
 client = MongoClient('mongodb://localhost:27017/')
+
+# Temporary for test 
+client.drop_database('movie_reviews')
 db = client['movie_reviews']
 
 # Create collections
 movies_collection = db['movies']
 comments_collection = db['comments']
+users_collection = db['users']
+movies_comments = db['movies_comments']
+users_comments = db['users_comments']
 
-# Check if the movies collection is empty
+comment_id = 0
+
 if movies_collection.count_documents({}) == 0:
     # If empty, insert the dummy movie data into the movies collection
     movies_data = [
@@ -21,6 +28,14 @@ if movies_collection.count_documents({}) == 0:
     ]
     movies_collection.insert_many(movies_data)
 
+if users_collection.count_documents({}) == 0:
+    # If empty, insert the dummy movie data into the movies collection
+    user_data = [
+        {"_id": 1, "name": "Guest 1"}
+    ]
+    users_collection.insert_many(user_data)
+
+
 @app.route('/')
 def index():
     # Retrieve all movies from the database
@@ -29,21 +44,55 @@ def index():
 
 @app.route('/profile')
 def profile():
-    return render_template('login.html')
+    # Update the user_id by login information in the future
+    user = users_collection.find_one({"_id": 1})
+    comment_ids_cursor = users_comments.find({"user_id": 1})
+
+    comment_ids = [comment['comment_id'] for comment in comment_ids_cursor]
+    comments = comments_collection.find({"_id": {"$in": comment_ids}}) 
+
+    return render_template('profile.html', user=user, comments = comments)
 
 @app.route('/movie/<int:movie_id>')
 def movie(movie_id):
+    comment_ids_cursor = movies_comments.find({"movie_id": movie_id})
+    comment_ids = [comment['comment_id'] for comment in comment_ids_cursor]
+    comments = comments_collection.find({"_id": {"$in": comment_ids}}) 
     movie_info = movies_collection.find_one({"_id": movie_id})
-    comments = comments_collection.find({"movie_id": movie_id})
+    
+    # update in the future: Retrieve the user id that posted each comment and add it to comments
+    user = users_collection[0]
+
     return render_template('movie.html', movie=movie_info, comments=comments)
+
 
 @app.route('/post_comment/<int:movie_id>', methods=['POST'])
 def post_comment(movie_id):
-    print("success or not_______________________")
+    global comment_id
     comment = request.form['comment']
     if comment:
-        comments_collection.insert_one({"movie_id": movie_id, "comment": comment})
+        comments_collection.insert_one({"_id": comment_id, "comment": comment})
+        movies_comments.insert_one({"movie_id": movie_id, "comment_id": comment_id})
+
+        # update in the future: Retrieve the user id that post each comment
+        users_comments.insert_one({"user_id": 1, "comment_id": comment_id})
+    comment_id = comment_id + 1
     return redirect(url_for('movie', movie_id=movie_id))
+
+@app.route('/delete_comment/<int:comment_id>', methods=['POST'])
+def delete_comment(comment_id):
+    comments_collection.delete_one({"_id": comment_id})
+    users_collection.delete_one({"comment_id": comment_id})
+    movies_comments.delete_one({"comment_id": comment_id})
+    return redirect(url_for('profile'))
+
+@app.route('/edit_comment/<int:comment_id>', methods=['POST'])
+def edit_comment(comment_id):
+    edited_comment = request.form['edited_comment']
+    print(edit_comment)
+    comments_collection.update_one({"_id": comment_id}, {"$set": {"comment": edited_comment}})
+    
+    return redirect(url_for('profile'))
 
 if __name__ == '__main__':
     app.run(debug=True)
