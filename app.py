@@ -58,7 +58,6 @@ def login():
         if user:
             global user_id
             user_id = user['_id']
-            print(user_id)
             return redirect(url_for('profile'))
         else:
             return 'Invalid username or password'
@@ -88,15 +87,26 @@ def register():
 def profile():
     global user_id
     user = users_collection.find_one({"_id": user_id})
-    if(user_id == 1):
+    if user_id == 1:
         comments = comments_collection.find()
-        return render_template('profile.html', user=user, comments = comments)
-    comment_ids_cursor = users_comments.find({"user_id": user_id})
+    else:
+        comment_ids_cursor = users_comments.find({"user_id": user_id})
 
-    comment_ids = [comment['comment_id'] for comment in comment_ids_cursor]
-    comments = comments_collection.find({"_id": {"$in": comment_ids}}) 
-
-    return render_template('profile.html', user=user, comments = comments)
+        comment_ids = [comment['comment_id'] for comment in comment_ids_cursor]
+        comments = comments_collection.find({"_id": {"$in": comment_ids}}) 
+    
+    # To be optimized - update the value passed into template, or maybe change of data structure
+    comments_movie_title = []
+    for comment in comments:
+        movie_id = movies_comments.find_one({"comment_id": comment['_id']})
+        movie = movies_collection.find_one({"_id": movie_id['movie_id']})
+        if movie:
+            updated_comment = dict(comment)
+            updated_comment["title"] = movie['title']
+            comments_movie_title.append(updated_comment)
+    for comment in comments_movie_title:
+        print(comment['title'])
+    return render_template('profile.html', user=user, comments = comments_movie_title)
 
 @app.route('/movie/<int:movie_id>')
 def movie(movie_id):
