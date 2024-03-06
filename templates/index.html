@@ -4,6 +4,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Movie Review Website</title>
+    <style>
+        .top-right-buttons {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .top-right-buttons li {
+            display: inline;
+            margin-left: 10px;
+        }
+
+        .top-right-buttons li a {
+            color: black;
+            text-decoration: none;
+            padding: 5px 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+    </style>
 </head>
 <body>
     <nav>
@@ -12,6 +35,10 @@
             <li><a href="/profile">Profile</a></li> 
         </ul>
     </nav>
+    <ul class="top-right-buttons">
+        <li><a href="/login">Login</a></li>
+        <li><a href="/register">Register</a></li>
+    </ul>
     <h1>List of Movies</h1>
     <ul>
         {% for movie in movies %}
