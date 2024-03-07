@@ -11,7 +11,8 @@
 
         .movie-name {
             font-weight: bold; 
-            margin-right: 5px; 
+            margin-right: 5px;
+            margin-bottom: 5px; 
         }
 
         .comment-container {
@@ -34,19 +35,19 @@
     <h1>{{ user.name }}</h1>
     <ul>
         {% for comment in comments %}
-            <li class="comment-container">
-                <div class="movie-comment-container">
-                    <div class="movie-name">{{ comment.title }}:</div>
-                    <div class="comment-text">{{ comment.comment }}</div>
+            <li class="movie-comment-container">
+                <div class="movie-name">{{ comment.title }}:</div>
+                <div class="comment-container">
+                    <div class="comment-text">{{ comment.name }} {{comment.comment }}</div>                    
+                    <form class="edit-comment-form" action="/edit_comment/{{ comment._id }}" method="post" style="display: none;">
+                        <input type="text" name="edited_comment" class="edit-comment-input" value="{{ comment.comment }}">
+                        <input type="submit" value="Submit">
+                    </form>
+                    <form action="/delete_comment/{{ comment._id }}" method="post">
+                        <input type="submit" value="Delete">
+                    </form>
+                    <button class="edit-comment">Edit</button>
                 </div>
-                <form class="edit-comment-form" action="/edit_comment/{{ comment._id }}" method="post" style="display: none;">
-                    <input type="text" name="edited_comment" class="edit-comment-input" value="{{ comment.comment }}">
-                    <input type="submit" value="Submit">
-                </form>
-                <form action="/delete_comment/{{ comment._id }}" method="post">
-                    <input type="submit" value="Delete">
-                </form>
-                <button class="edit-comment">Edit</button>
             </li>
         {% endfor %}
     </ul>

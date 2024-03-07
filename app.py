@@ -103,9 +103,12 @@ def profile():
         if movie:
             updated_comment = dict(comment)
             updated_comment["title"] = movie['title']
+            if user_id == 1:
+                comment_user_id = users_comments.find_one({"comment_id": comment['_id']})
+                comment_user = users_collection.find_one({"_id": comment_user_id['user_id']})
+                updated_comment["name"] = comment_user['name'] + ": "
             comments_movie_title.append(updated_comment)
-    for comment in comments_movie_title:
-        print(comment['title'])
+
     return render_template('profile.html', user=user, comments = comments_movie_title)
 
 @app.route('/movie/<int:movie_id>')
