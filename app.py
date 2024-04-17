@@ -175,6 +175,15 @@ def movie_comments(movie_id):
     return render_template('movie_comments.html', movie=movie_info, comments=movie_comments)
 
 
+@app.route('/delete_movie/<int:movie_id>')
+def delete_movie(movie_id):
+    if user_id != 1:
+        return 'You are not authorized to delete movies.'
+    movies_collection.delete_one({"_id": movie_id})
+
+    return redirect(url_for('index'))
+
+
 @app.route('/post_comment/<int:movie_id>', methods=['POST'])
 def post_comment(movie_id):
     global user_id

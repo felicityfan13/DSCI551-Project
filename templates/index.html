@@ -60,9 +60,36 @@
 
 
         .comment-button {
+            color: green;
             margin-left: auto;
             margin-left: 10px;
         }
+
+        .delete-button {
+            color: red;
+            margin-left: auto;
+            margin-right: 10px;
+            text-decoration: none;
+        }
+
+        .add-movie-button {
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 10px;
+        }
+
+        .add-movie-button:hover {
+            background-color: #45a049;
+        }
+
     </style>
 </head>
 <body>
@@ -83,12 +110,14 @@
                 <a href="/movie/{{ movie._id }}">{{ movie.title }} ({{ movie.year }})</a>
                 {% if user_id == 1 %}
                     <a href="/movie/{{ movie._id }}/comments" class="comment-button">View Comments</a>
+                    <a href="/delete_movie/{{ movie._id }}" class="delete-button">Delete</a>
                 {% endif %}
             </li>
         {% endfor %}
     </ul>
     {% if user_id == 1 %}
-        <ul><li><a href="/add_movie">Add Movie</a></li></ul>
+{#        <ul><li><a href="/add_movie">Add Movie</a></li></ul>#}
+        <button class="add-movie-button"><a href="/add_movie" style="color: white; text-decoration: none;">Add Movie</a></button>
     {% endif %}
 </body>
 </html>
