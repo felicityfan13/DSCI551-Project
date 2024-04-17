@@ -5,6 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Movie Review Website</title>
     <style>
+
+        body {
+            background-image: url('{{ url_for('static', filename='111.jpg') }}');
+            background-size: cover;
+            text-align: center;
+            position: relative;
+        }
+
+        nav {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+        }
+
+
+
         .top-right-buttons {
             position: absolute;
             top: 10px;
@@ -26,6 +42,27 @@
             border: 1px solid #ccc;
             border-radius: 5px;
         }
+
+        {# .movie-item {#}
+        {#    display: flex;#}
+        {#    align-items: baseline;#}
+        {# }#}
+
+         .movie-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 10px;
+            border-radius: 10px;
+        }
+
+
+        .comment-button {
+            margin-left: auto;
+            margin-left: 10px;
+        }
     </style>
 </head>
 <body>
@@ -42,8 +79,16 @@
     <h1>List of Movies</h1>
     <ul>
         {% for movie in movies %}
-            <li><a href="/movie/{{ movie._id }}">{{ movie.title }} ({{ movie.year }})</a></li>
+            <li class="movie-item">
+                <a href="/movie/{{ movie._id }}">{{ movie.title }} ({{ movie.year }})</a>
+                {% if user_id == 1 %}
+                    <a href="/movie/{{ movie._id }}/comments" class="comment-button">View Comments</a>
+                {% endif %}
+            </li>
         {% endfor %}
     </ul>
+    {% if user_id == 1 %}
+        <ul><li><a href="/add_movie">Add Movie</a></li></ul>
+    {% endif %}
 </body>
 </html>
