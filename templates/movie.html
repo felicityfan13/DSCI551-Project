@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ movie.title }}</title>
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="/index">Home</a></li>
+            <li><a href="/profile">Profile</a></li> 
+        </ul>
+    </nav>
+    <h1>{{ movie.title }} ({{ movie.year }})</h1>
+    <h2>Comments</h2>
+    <ul>
+        {% for comment in comments %}
+            <li>{{ comment.comment }}</li>
+        {% endfor %}
+    </ul>
+    <form action="/post_comment/{{ movie._id }}" method="post">
+        <label for="comment">Write a Comment:</label><br>
+        <textarea id="comment" name="comment" rows="4" cols="50"></textarea><br>
+        <input type="submit" value="Submit">
+    </form>
+</body>
+</html>
