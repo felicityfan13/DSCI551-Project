@@ -5,6 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit User Information</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        body {
+            background-image: url('{{ url_for('static', filename='111.jpg') }}');
+            background-size: cover;
+            text-align: center;
+            position: relative;
+        }
+    </style>
 </head>
 <body>
     <h1>Update {{ user.name }}'s Username and Password</h1>

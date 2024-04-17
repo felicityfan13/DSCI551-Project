@@ -5,6 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ user.name }}</title>
     <style>
+
+        body {
+            background-image: url('{{ url_for('static', filename='111.jpg') }}');
+            background-size: cover;
+            text-align: center;
+            position: relative;
+        }
+
+
         .movie-comment-container {
             margin-bottom: 10px;
         }
